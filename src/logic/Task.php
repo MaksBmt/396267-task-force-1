@@ -2,7 +2,7 @@
 
 namespace force\logic;
 
-class AvailableActions
+class Task
 {
     public const STATUS_NEW = 'new';
     public const STATUS_IN_PROGRESS = 'in_progress';
@@ -15,12 +15,8 @@ class AvailableActions
     public const ACTION_DENY = 'act_deny';
     public const ACTION_COMPLETE = 'act_complete';
 
-    public const ROLE_PERFORMER = 'performer';
-    public const ROLE_CLIENT = 'customer';
-
     private $performerId;
     private $clientId;
-
     private $status;
 
     /**
@@ -57,12 +53,12 @@ class AvailableActions
      * @param string $action
      * @return string|null
      */
-    public function getNextStatus(string $action): ?string
+    public function getStatusAfterAction(string $action): ?string
     {
         $map = [
               self::ACTION_COMPLETE => self::STATUS_COMPLETE,
               self::ACTION_CANCEL => self::STATUS_CANCEL,
-              self::ACTION_DENY => self::STATUS_CANCEL,
+              self::ACTION_DENY => self::STATUS_EXPIRED,
           ];
 
         return $map[$action] ?? null;
@@ -83,7 +79,7 @@ class AvailableActions
               self::STATUS_EXPIRED
             ];
 
-        if (in_array($status, $availableStatuses)) {
+        if (in_array($status, $availableStatuses,true)) {
             $this -> status = $status;
         }
     }
